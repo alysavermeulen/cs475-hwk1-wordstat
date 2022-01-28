@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 {
 	char input[MAX_INPUT_LEN]; // holds user-input string
 	WordStats st;
-	initStats(st);
+	st = initStats(st);
 	int choice = MENU_RET; // begin by allowing user to enter strings
 	while (choice != MENU_EXIT){
 		if (choice!=MENU_VC && choice!=MENU_WC && choice!=MENU_HISTO && choice!=MENU_RET){

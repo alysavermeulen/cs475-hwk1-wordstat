@@ -18,7 +18,10 @@
  */
 WordStats initStats(WordStats st)
 {
-	st.histo = {0};
+	int i;
+	for (i = 0; i < ALPHABET_SIZE; i++){
+		st.histo[i] = 0;
+	}
 	st.wordCount = 0;
 	st.vowelCount = 0;
 	st.consonantCount = 0;
