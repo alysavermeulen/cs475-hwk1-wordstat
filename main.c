@@ -1,6 +1,6 @@
 /**
  * Contains the main() function for allowing user input
- * and displaying requested output. test
+ * and displaying requested output.
  *
  * @author Alysa
  */
