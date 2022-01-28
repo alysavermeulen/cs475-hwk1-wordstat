@@ -1,7 +1,15 @@
+/**
+ * Implements the functions declared in stats.h
+ * (calculating and printing word stats)
+ *
+ * @author Alysa
+ */
 
 #include "stats.h"
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 /**
  * Initializes the statistics structure
@@ -10,20 +18,35 @@
  */
 WordStats initStats(WordStats st)
 {
-	// TODO initialize all fields in the st struct before returning it
+	st.histo = {0};
+	st.wordCount = 0;
+	st.vowelCount = 0;
+	st.consonantCount = 0;
 	return st;
 }
 
 /**
  * Updates vowels and consonants in the struct
  * @param st WordStats structure
- * @param input the user-input string
+ * @param str the user-input string
  * @return an updated WordStats struct 
  */
 WordStats updateVowelCons(WordStats st, const char str[])
 {
-	// TODO - update the vowel and consonant count
-	//        in the st struct before returning it
+	int i = 0;
+	char c;
+	while (str[i] != '\0'){ // while there are still characters left in the string
+		c = tolower(str[i]);
+		if (isalpha(c)){
+			if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'){
+				st.vowelCount++;
+			}
+			else{
+				st.consonantCount++;
+			}
+		}
+		i++;
+	}
 	return st;
 }
 
@@ -35,7 +58,17 @@ WordStats updateVowelCons(WordStats st, const char str[])
  */
 WordStats updateWordCount(WordStats st, const char str[])
 {
-	// TODO - update the word count in the st struct before returning it
+	const char s[2] = " "; // words are space-delimited
+	char* str2 = strdup(str); // must make copy of constant string before tokenizing it
+	char* token = NULL;
+	token = strtok(str2,s); // get first token
+	while (token != NULL){  // go through tokens
+		if (isalpha(token[0])){ // if first char in token is alphabetical, count as word
+			st.wordCount++;
+		}
+		token = strtok(NULL,s);
+	}
+	free(str2); // free the copy
 	return st;
 }
 
@@ -45,7 +78,12 @@ WordStats updateWordCount(WordStats st, const char str[])
  */
 void printVowelConsFreq(WordStats st)
 {
-	// TODO: print vowel and consonant frequency
+	int total = st.vowelCount + st.consonantCount;
+	float vowelFreq = (st.vowelCount/(float)total)*100;
+	float consonantFreq = (st.consonantCount/(float)total)*100;
+	printf("Vowels = %d (%.2f%%), ", st.vowelCount, vowelFreq);
+	printf("Consonants = %d (%.2f%%), ", st.consonantCount, consonantFreq);
+	printf("Total = %d\n", total);
 }
 
 /**
@@ -54,7 +92,7 @@ void printVowelConsFreq(WordStats st)
  */
 void printWordCount(WordStats st)
 {
-	// TODO: prints word count
+	printf("Words: %d\n", st.wordCount);
 }
 
 /**
@@ -63,7 +101,33 @@ void printWordCount(WordStats st)
  */
 void printHistogram(WordStats st)
 {
-	// TODO: Prints vertical histogram
+	int i, a, histHeight = 0;
+	char c;
+	for (i = 0; i < ALPHABET_SIZE; i++){ // finding histogram height (highest frequency)
+		if (st.histo[i] > histHeight){
+			histHeight = st.histo[i];
+		}
+	}
+	for (i = histHeight; i >= 0; i--){ // using histogram height for printing vertically
+		for (a = 0; a < ALPHABET_SIZE; a++){
+			if (st.histo[a] > i){
+				printf("%*c ", 1, '*'); 
+			} else{
+				printf("%*c ", 1, ' ');
+			}
+		}
+    	printf("\n");
+	}
+	for (c = 'a'; c <= 'z'; c++){
+		printf("%c ", c);
+    }
+	printf("\n");
+	i = 0;
+	for (c = 'a'; c <= 'z'; c++){
+		printf("%d ", st.histo[i]);
+		i++;
+    }
+	printf("\n");
 }
 
 /**
@@ -73,5 +137,20 @@ void printHistogram(WordStats st)
  */
 void updateHistogram(int histo[], const char str[])
 {
-	// TODO: updates the frequencies in the histogram, given the letters in the input string
+	// updates the frequencies in the histogram, given the letters in the input string
+	int i = 0, j = 0;
+	char x, c;
+	while (str[i] != '\0'){
+		x = tolower(str[i]);
+		if (isalpha(x)){
+			for (c = 'a'; c <= 'z'; c++){
+				if (x == c){
+					histo[j]++;
+				}
+				j++;
+    		}
+		}
+		j=0;
+		i++;
+	}
 }

@@ -5,7 +5,7 @@
 #define ALPHABET_SIZE 26
 
 //structs
-typedef struct
+typedef struct WordStats
 {
 	int histo[ALPHABET_SIZE];
 	int wordCount;
